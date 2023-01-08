@@ -1,11 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import ShowImageLocal from './show_image_local/ShowImageLocal';
+import ShowImageOnline from './show_image_online/ShowImageOnline';
+import TouchOpacity from './touch_opacity/TouchOpacity';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      
     </View>
   );
 }
@@ -18,3 +20,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+
+/*<TouchOpacity/>
+      <ShowImageLocal />
+      <ShowImageOnline/>*/

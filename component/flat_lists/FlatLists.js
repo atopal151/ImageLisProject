@@ -1,31 +1,84 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from 'react-native';
-import data from './data';
+import { View,Platform,Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import axios from 'axios';
 
+const isIos=Platform.IOS==='ios';
 
 export default class FlatLists extends Component {
     constructor(props) {
         super(props);
         this.state = {
             text: '',
-            contacts: data,
+            page: 1,
+            contacts: [],
+            allContacts: [],
+            loading: true,
+            refreshing:false
         };
+        this.duringMomentum=false;
+    };
+
+   
+
+    componentDidMount() {
+        this.getContacts();
+    }
+
+    getContacts = async () => {
+
+        this.setState({
+            loading: true
+        });
+        const { data: { results: contacts } } = await axios.get(`https://randomuser.me/api/?results=30&page=${this.state.page}`);
+        const users = [...this.state.contacts, ...contacts];
+
+        if(this.state.refreshing){
+            users.reverse();
+        }
+
+        this.setState({
+            contacts: users,
+            allContacts: users,
+            loading: false,
+            refreshing:false
+        })
+    }
+
+    loadMore = () => {
+        if (!this.duringMomentum) {
+            this.setState({
+                page: this.state.page + 1,
+
+            }, () => {
+                this.getContacts();
+            });
+            this.duringMomentum = false;
+        }
+    };
+    onRefresh=()=>{
+        this.setState({
+            page:  1,
+            refreshing:true
+
+        }, () => {
+            this.getContacts();
+        });
     }
 
     renderContactItem = ({ item, index }) => {
         return (
             <TouchableOpacity style={[styles.itemContainer, { backgroundColor: index % 2 === 1 ? '#ebebeb' : '' }]}>
-                <Image style={styles.avatar} source={{ uri: item.picture }} />
+                <Image style={styles.avatar} source={{ uri: item.picture.thumbnail }} />
                 <View style={styles.textContainer}>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.name}>{item.company}</Text>
+                    <Text style={styles.name}>{item.name.first}{item.name.last}</Text>
+                    <Text style={styles.name}>{item.location.state}</Text>
                 </View>
             </TouchableOpacity>);
     };
     // ${item.name.toLowerCase()} ${item.company.toLowerCase()}
     searchFilter = text => {
-        const newData = data.filter(item => {
-            const listItem = item.name.toLowerCase() + item.company.toLowerCase()
+        const newData = this.state.allContacts.filter(item => {
+            const listItem = item.name.first.toLowerCase() + item.name.last.toLowerCase() + item.location.state.toLowerCase()
             return listItem.indexOf(text.toLowerCase()) > -1;
         });
         this.setState({
@@ -38,6 +91,8 @@ export default class FlatLists extends Component {
         return (
             <View style={styles.searchContainer} >
                 <TextInput
+                onFocus={()=> this.duringMomentum=true}
+                onBlur={()=> this.duringMomentum=false}
                     onChangeText={text => {
                         this.setState({
                             text,
@@ -50,13 +105,30 @@ export default class FlatLists extends Component {
         )
     }
 
+    renderFooter = () => {
+        if (!this.state.loading) return null;
+        return (
+            <View style={{ paddingVertical: 20 }}>
+                <ActivityIndicator size="large" />
+            </View>
+        )
+    }
+
+
     render() {
         return (
             <FlatList
+                ListFooterComponent={this.renderFooter}
                 ListHeaderComponent={this.renderHeader()}
                 renderItem={this.renderContactItem}
                 data={this.state.contacts}
-                keyExtractor={(item) => item._id} />
+                keyExtractor={(item) => item.login.uuid}
+                onEndReached={this.loadMore}
+                onEndReachedThreshold={isIos ? 0 : .2}
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh}
+                />
+               
 
         );
     }

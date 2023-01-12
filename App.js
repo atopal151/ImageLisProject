@@ -11,7 +11,7 @@ import UserListApi from './component/user_api/UserListApi';
 export default function App() {
   return (
     <SafeAreaView>
-       <UserListApi/>
+       <FlatLists/>
     </SafeAreaView>
   );
 }

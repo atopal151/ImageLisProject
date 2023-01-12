@@ -22,9 +22,8 @@ export default class TouchOpacity extends Component {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={this._onPressButton}>
-
                     <View >
-                        <Image style={styles.imageStyle} source={require('../assets/adaptive-icon.png')} />
+                        <Image style={styles.imageStyle} source={require('../../assets/adaptive-icon.png')} />
                     </View>
                 </TouchableOpacity>
 

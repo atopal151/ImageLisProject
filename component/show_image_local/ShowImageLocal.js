@@ -11,7 +11,7 @@ export default class ShowImageLocal extends Component {
   render() {
     return (
       <View>
-        <Image style={styles.imageStyle} source={require('../assets/photo.jpg')}/>
+        <Image style={styles.imageStyle} source={require('../../assets/photo.jpg')}/>
       </View>
     );
   }

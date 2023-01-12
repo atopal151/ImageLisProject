@@ -1,27 +1,36 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import ShowImageLocal from './show_image_local/ShowImageLocal';
-import ShowImageOnline from './show_image_online/ShowImageOnline';
-import TouchOpacity from './touch_opacity/TouchOpacity';
+import { StyleSheet,SafeAreaView, Text, View } from 'react-native';
+import ShowImageOnline from './component/show_image_online/ShowImageOnline';
+import TouchOpacity from './component/touch_opacity/TouchOpacity';
+import TextGiris from './component/text_in/TextGiris';
+import ScrollComponent from './component/scroll_component/ScrollComponent';
+import FlatLists from './component/flat_lists/FlatLists';
+import PlatformEample from './component/platform_example/PlatformEample';
+import UserListApi from './component/user_api/UserListApi';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      
-    </View>
+    <SafeAreaView>
+       <UserListApi/>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+   
   },
 });
 
 
-/*<TouchOpacity/>
-      <ShowImageLocal />
-      <ShowImageOnline/>*/
+/*    
+      * <ScrollComponent/>
+      * <TouchOpacity/>
+      * <ShowImageLocal/>
+      * <ShowImageOnline/>
+      * <TextGiris/>
+
+*/
